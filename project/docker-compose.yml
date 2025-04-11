@@ -2,13 +2,37 @@ version: '3.8'
 
 services:
 
-    broker-service:
-        build:
-            context:    ./../broker-service
-            dockerfile: ./../broker-service/broker-service.Dockerfile
-        restart: always
-        ports:
-            - "8000:8000"
-        deploy:
-            mode:     replicated
-            replicas: 1
+  broker-service:
+    build:
+      context: ./../broker-service
+      dockerfile: ./../broker-service/broker-service.Dockerfile
+    restart: always
+    ports:
+      - "8000:8000"
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  authentication-service:
+    build:
+      context: ./../authentication-service
+      dockerfile: ./../authentication-service/authentication-service.Dockerfile
+    restart: always
+    ports:
+      - "8091:8000"
+    deploy:
+      mode: replicated
+      replicas: 1
+    volumes:
+      - ./db-data/sqlite/:/db
+    environment:
+      DSN: ./db/authusers.db
+
+#  sqlite:
+#    image: hibitdev/sqlite:latest
+#    container_name: sqlite
+#    ports:
+#      - "8191:8191"
+#    volumes:
+#      - sqlite-data:/db
+#    command: ["tail", "-f", "/dev/null"]  # Keeps the container running
