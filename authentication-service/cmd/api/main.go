@@ -12,7 +12,7 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-const webPort = "8000"
+const webPort = "80"
 
 var counts int64
 
@@ -28,7 +28,6 @@ func main() {
 	conn := connectToDB()
 	if conn == nil {
 		log.Panic("Can't connect to SQLite!")
-		log.Panic(conn)
 	}
 
 	// set up config
@@ -50,7 +49,6 @@ func main() {
 
 func openDB(dsn string) (*sql.DB, error) {
 	db, err := sql.Open("sqlite", dsn)
-
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +57,7 @@ func openDB(dsn string) (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(err)
+
 	return db, nil
 }
 

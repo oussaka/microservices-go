@@ -13,13 +13,22 @@ services:
       mode: replicated
       replicas: 1
 
+  logger-service:
+    build:
+      context: ./../logger-service
+      dockerfile: ./../logger-service/logger-service.Dockerfile
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+
   authentication-service:
     build:
       context: ./../authentication-service
       dockerfile: ./../authentication-service/authentication-service.Dockerfile
     restart: always
     ports:
-      - "8091:8000"
+      - "8091:80"
     deploy:
       mode: replicated
       replicas: 1
@@ -28,11 +37,22 @@ services:
     environment:
       DSN: ./db/authusers.db
 
+  mongo:
+    image: 'mongo:4.2.16-bionic'
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: logs
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - ./db-data/mongo/:/data/db
+
 #  sqlite:
 #    image: hibitdev/sqlite:latest
 #    container_name: sqlite
 #    ports:
 #      - "8191:8191"
 #    volumes:
-#      - sqlite-data:/db
+#      - ./db-data/sqlite/:/db
 #    command: ["tail", "-f", "/dev/null"]  # Keeps the container running
